@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">FoodEngine</string>
+
+
+    <string-array name="State">
+        <item>Maharashtra</item>
+        <item>Gujarat</item>
+    </string-array>
+
+
+</resources>
