@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <RelativeLayout android:orientation="vertical" android:layout_height="match_parent" android:layout_width="match_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/swipelayout"/>
+
+    <androidx.recyclerview.widget.RecyclerView android:orientation="vertical" android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/recycle_menu"/>
+
+</RelativeLayout>

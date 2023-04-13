@@ -46,7 +46,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Lemail"
+            android:id="@+id/Demail"
             android:layout_marginTop="15dp"
             android:paddingBottom="10dp">
 
@@ -62,7 +62,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Lpassword"
+            android:id="@+id/Dpassword"
             android:layout_marginTop="11dp"
             android:paddingBottom="5dp"
             app:passwordToggleEnabled="true">
@@ -78,14 +78,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/forgotpass"
+            android:id="@+id/Dforgotpass"
             android:text="Forgot Password?"
             android:gravity="end"
             android:textSize="16sp"
             android:textColor="#090909"/>
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/Loginbtn"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
@@ -97,7 +97,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView3"
+            android:id="@+id/donot"
             android:layout_gravity="center"
             android:text="Don't Have An Account? Create"
             android:layout_marginTop="10dp"
@@ -144,7 +144,7 @@
             android:textSize="18sp"/>
 
         <Button
-            android:id="@+id/btnphone"
+            android:id="@+id/Dbtnphone"
             android:layout_width="105dp"
             android:layout_height="40dp"
             android:layout_gravity="center"

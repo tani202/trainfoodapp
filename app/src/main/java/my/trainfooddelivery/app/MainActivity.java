@@ -51,13 +51,21 @@ public class MainActivity extends AppCompatActivity {
 
                     if (Fauth.getCurrentUser().isEmailVerified()) {
                         Fauth = FirebaseAuth.getInstance();
-                        databaseReference = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(FirebaseAuth.getInstance().getUid() + "/role");
+                        databaseReference = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(FirebaseAuth.getInstance().getUid() + "/Role");
                         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String role = snapshot.getValue(String.class);
-                                if (role.equals("chef")) {
+                                if (role.equals("Chef")) {
                                     startActivity(new Intent(MainActivity.this, ChefFoodPanel_BottomNavigation.class));
+                                    finish();
+
+                                } else if (role.equals("Customer")) {
+                                    startActivity(new Intent(MainActivity.this, CustomerFoodPanel_BottomNavigation.class));
+                                    finish();
+
+                                } else if (role.equals("Delivery")) {
+                                    startActivity(new Intent(MainActivity.this, DeliveryFoodPanel_BottomNavigation.class));
                                     finish();
 
                                 }
