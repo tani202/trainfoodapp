@@ -2,12 +2,21 @@ package my.trainfooddelivery.app;
 
 public class UpdateDishModel {
 
-    String Dishes,RandomUID,Description,Quantity,Price,ImageURL,ChefId;
+    String Dishes,RandomUID,Description,Quantity,Price,ImageURL,Restaurant;
 
     // Press Alt+insert
+      public UpdateDishModel()
+      {
 
-    public UpdateDishModel(){
-
+      }
+    public UpdateDishModel(String  dish,String desc,String randomuid,String quan,String price,String image,String restaurant){
+        Dishes=dish;
+        RandomUID=randomuid;
+        Description=desc;
+        Quantity=quan;
+        Price=price;
+        ImageURL=image;
+        Restaurant=restaurant;
     }
 
     public String getDishes() {
@@ -58,11 +67,9 @@ public class UpdateDishModel {
         ImageURL = imageURL;
     }
 
-    public String getChefId() {
-        return ChefId;
-    }
+    public void setRestaurant(String restaurant){  Restaurant=restaurant;;}
 
-    public void setChefId(String chefId) {
-        ChefId = chefId;
-    }
+    public String getRestaurant(){ return Restaurant ;}
+
+
 }

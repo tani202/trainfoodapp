@@ -1,17 +1,17 @@
 package my.trainfooddelivery.app.ChefFoodPanel;
 
 public class Chef {
-    private String Area, City, ConfirmPassword, Emailid, Fname, House, Lname, Mobile, Password, Postcode, State;
+    private String Area,  ConfirmPassword, Emailid, Restaurant, House, Lname, Mobile, Password, Postcode, State;
 
     // Press Alt+Insert
 
 
-    public Chef(String area, String city, String confirmPassword, String emailid, String fname, String house, String lname, String mobile, String password, String postcode, String state) {
+    public Chef(String area, String confirmPassword, String emailid, String rest, String house, String lname, String mobile, String password, String postcode, String state) {
         this.Area = area;
-        City = city;
+
         ConfirmPassword = confirmPassword;
         Emailid = emailid;
-        Fname = fname;
+        Restaurant = rest;
         House = house;
         Lname = lname;
         Mobile = mobile;
@@ -26,9 +26,6 @@ public class Chef {
         return Area;
     }
 
-    public String getCity() {
-        return City;
-    }
 
     public String getConfirmPassword() {
         return ConfirmPassword;
@@ -38,8 +35,8 @@ public class Chef {
         return Emailid;
     }
 
-    public String getFname() {
-        return Fname;
+    public String getRestaurant() {
+        return Restaurant;
     }
 
     public String getHouse() {

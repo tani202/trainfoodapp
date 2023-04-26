@@ -1,9 +1,11 @@
+
 package my.trainfooddelivery.app.customerFoodPanel;
 
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.util.pool.FactoryPools;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,11 +50,15 @@ import my.trainfooddelivery.app.UpdateDishModel;
 public class CustomerHomeFragment extends Fragment {
 
 
+
     RecyclerView recyclerView;
     private List<UpdateDishModel> updateDishModelList;
     private CustomerHomeAdapter adapter;
     String State, City, Area;
-    DatabaseReference databaseReference, data;
+    DatabaseReference databaseReference;
+    String selectedStationName;
+    String selectedStateCode;
+    TextInputLayout state ,area;
 
     @Nullable
     @Override
@@ -60,58 +69,59 @@ public class CustomerHomeFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         updateDishModelList = new ArrayList<>();
+        Bundle bundle = getArguments();
+        selectedStationName = bundle.getString("selectedStationName");
+        selectedStateCode = bundle.getString("selectedStateCode");
+        TextView state = v.findViewById(R.id.state_code_text_view);
+        state.setText(bundle.getString("selectedStationName"));
 
-        String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        data = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(userid);
-        data.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Chef cheff = snapshot.getValue(Chef.class);
+        TextView area = v.findViewById(R.id.station_name_text_view);
+        area.setText(bundle.getString("selectedStateCode"));
 
 
-                State = cheff.getState();
-                City = cheff.getCity();
-                Area = cheff.getArea();
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        databaseReference = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("FoodDetails").child(State).child(City).child(Area);
-       // Query query = databaseReference.child(State).child(City).child(Area);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("FoodDetails").child(selectedStateCode).child(selectedStationName);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    UpdateDishModel models = new UpdateDishModel();
-                    models.setRandomUID(snapshot.child("RandomUID").getValue().toString());
-                    models.setDishes(snapshot.child("Dishes").getValue().toString());
-                    models.setPrice(snapshot.child("Price").getValue().toString());
-                    updateDishModelList.add(models);
+                for (DataSnapshot restaurantSnapshot : dataSnapshot.getChildren()) {
+                    if (restaurantSnapshot.exists()) {
+                        int nullUidCount = 0;
+                        UpdateDishModel models = new UpdateDishModel();
+                        String randomUID = restaurantSnapshot.child("RandomUID").getValue(String.class);
+                        if (randomUID == null) { // Check if the value is not null
+                            nullUidCount++;
+                            Log.d("DatabaseReference", "nulll uid " + nullUidCount);
+                        }
+                        models.setRandomUID(restaurantSnapshot.child("RandomUID").getValue(String.class));
+                        models.setDishes(restaurantSnapshot.child("Dishes").getValue(String.class));
+                        models.setPrice(restaurantSnapshot.child("Price").getValue(String.class));
+                        models.setRestaurant(restaurantSnapshot.child("ImageURL").getValue(String.class));
+                        updateDishModelList.add(models);
+
+                        adapter = new CustomerHomeAdapter(getContext(), updateDishModelList);
+                        recyclerView.setAdapter(adapter);
+                    }
                 }
-                adapter = new CustomerHomeAdapter(getContext(), updateDishModelList);
-                recyclerView.setAdapter(adapter);
-
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-
-
         });
+
 
 
         return v;
-
     }
+
+
+
+
+
 }
+
 
 
 

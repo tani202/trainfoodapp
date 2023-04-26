@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".customerFoodPanel.customertrainfragment">
 
+
+
     <TextView
 
         android:layout_width="wrap_content"
@@ -67,12 +69,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="26dp" />
+
         <Spinner
             android:id="@+id/result_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="10dp"
+            />
+
         <!--        <TextView-->
         <!--            android:id="@+id/result"-->
         <!--            android:layout_width="280dp"-->
@@ -83,4 +88,5 @@
         <!--        </TextView>-->
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

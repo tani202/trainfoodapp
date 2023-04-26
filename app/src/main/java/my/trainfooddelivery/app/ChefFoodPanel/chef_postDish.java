@@ -102,7 +102,7 @@ public class chef_postDish extends AppCompatActivity {
     Button post_dish;
     Spinner Dishes;
     TextInputLayout desc,qty,pri;
-    String descrption,quantity,price,dishes;
+    String descrption,quantity,price,dishes,restaurant;
     Uri imageuri;
 
     FirebaseStorage storage;
@@ -111,7 +111,7 @@ public class chef_postDish extends AppCompatActivity {
     DatabaseReference databaseReference,dataa;
     FirebaseAuth Fauth;
     StorageReference ref;
-    String ChefId , RandomUID , State, City , Area;
+    String ChefId , RandomUID , rname, Code , Area;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,19 +126,31 @@ public class chef_postDish extends AppCompatActivity {
         pri = (TextInputLayout) findViewById(R.id.price);
         post_dish = (Button) findViewById(R.id.post);
         Fauth = FirebaseAuth.getInstance();
-        databaseReference = firebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("FoodDetails");
+        databaseReference = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("FoodDetails");
 
         try {
             String userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            dataa = firebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(userid);
+            dataa = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(userid);
             dataa.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                     Chef cheff = snapshot.getValue(Chef.class);
-                    State = cheff.getState();
-                    City = cheff.getCity();
-                    Area = cheff.getArea();
+                    if (cheff !=null) {
+                        Code = cheff.getState();
+                        Area = cheff.getArea();
+                        rname= cheff.getRestaurant();
+
+
+                    }
+                    else
+                    {
+                        Log.d("error","no fetch");
+
+                    }
+                    Log.d("error","code"+Code);
+                    Log.d("error","area"+Area);
+                    Log.d("error","rname"+rname);
                     imageButton = (ImageButton) findViewById(R.id.image_upload);
                     IVPreviewImage = findViewById(R.id.IVPreviewImage);
                     imageButton.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +176,7 @@ public class chef_postDish extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Log.e("onDataChange: ", "Failed to read value.", error.toException());
                 }
             });
         }catch (Exception e){
@@ -174,6 +186,7 @@ public class chef_postDish extends AppCompatActivity {
     }
 
     private void uploadImage() {
+         Log.d("state","state"+Area);
 
         if(imageuri != null){
             final ProgressDialog progressDialog = new ProgressDialog(chef_postDish.this);
@@ -188,8 +201,9 @@ public class chef_postDish extends AppCompatActivity {
                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            FoodDetails info = new FoodDetails(dishes,quantity,price,descrption,String.valueOf(uri),RandomUID,ChefId);
-                            firebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("FoodDetails").child(State).child(City).child(Area)
+                            restaurant=rname;
+                            FoodDetails info = new FoodDetails(dishes,quantity,price,descrption,String.valueOf(uri),RandomUID,ChefId,restaurant);
+                            FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("FoodDetails").child(Code).child(Area).child(rname)
                                     .setValue(info).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
@@ -205,7 +219,7 @@ public class chef_postDish extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
                     Toast.makeText(chef_postDish.this,e.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
