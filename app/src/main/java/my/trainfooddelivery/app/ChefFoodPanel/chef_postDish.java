@@ -203,7 +203,7 @@ public class chef_postDish extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             restaurant=rname;
                             FoodDetails info = new FoodDetails(dishes,quantity,price,descrption,String.valueOf(uri),RandomUID,ChefId,restaurant);
-                            FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("FoodDetails").child(Code).child(Area).child(rname)
+                            FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("FoodDetails").child(Code).child(Area).child(rname).child(dishes)
                                     .setValue(info).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {

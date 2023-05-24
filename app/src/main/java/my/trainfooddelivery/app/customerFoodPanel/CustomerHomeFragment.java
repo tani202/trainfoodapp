@@ -56,9 +56,10 @@ public class CustomerHomeFragment extends Fragment {
     private CustomerHomeAdapter adapter;
     String State, City, Area;
     DatabaseReference databaseReference;
-    String selectedStationName;
-    String selectedStateCode;
+    String selectedStationName,trainno;
+    String selectedStateCode,selectedstationeta;
     TextInputLayout state ,area;
+
 
     @Nullable
     @Override
@@ -72,8 +73,10 @@ public class CustomerHomeFragment extends Fragment {
         Bundle bundle = getArguments();
         selectedStationName = bundle.getString("selectedStationName");
         selectedStateCode = bundle.getString("selectedStateCode");
+        selectedstationeta=bundle.getString("etatime");
+        trainno=bundle.getString("trainno");
         TextView state = v.findViewById(R.id.state_code_text_view);
-        state.setText(bundle.getString("selectedStationName"));
+        state.setText(bundle.getString("etatime"));
 
         TextView area = v.findViewById(R.id.station_name_text_view);
         area.setText(bundle.getString("selectedStateCode"));
@@ -85,23 +88,23 @@ public class CustomerHomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot restaurantSnapshot : dataSnapshot.getChildren()) {
-                    if (restaurantSnapshot.exists()) {
-                        int nullUidCount = 0;
-                        UpdateDishModel models = new UpdateDishModel();
-                        String randomUID = restaurantSnapshot.child("RandomUID").getValue(String.class);
-                        if (randomUID == null) { // Check if the value is not null
-                            nullUidCount++;
-                            Log.d("DatabaseReference", "nulll uid " + nullUidCount);
-                        }
-                        models.setRandomUID(restaurantSnapshot.child("RandomUID").getValue(String.class));
-                        models.setDishes(restaurantSnapshot.child("Dishes").getValue(String.class));
-                        models.setPrice(restaurantSnapshot.child("Price").getValue(String.class));
-                        models.setRestaurant(restaurantSnapshot.child("ImageURL").getValue(String.class));
-                        updateDishModelList.add(models);
+                     for(DataSnapshot dish:restaurantSnapshot.getChildren()) {
 
-                        adapter = new CustomerHomeAdapter(getContext(), updateDishModelList);
-                        recyclerView.setAdapter(adapter);
-                    }
+                         int nullUidCount = 0;
+                         UpdateDishModel models = new UpdateDishModel();
+                         String randomUID = dish.child("RandomUID").getValue(String.class);
+
+                         models.setRandomUID(dish.child("RandomUID").getValue(String.class));
+                         models.setDishes(dish.child("Dishes").getValue(String.class));
+                         models.setPrice(dish.child("Price").getValue(String.class));
+                         models.setQuantity(dish.child("Quantity").getValue(String.class));
+                         models.setRestaurant(dish.child("ImageURL").getValue(String.class));
+                         updateDishModelList.add(models);
+
+                         adapter = new CustomerHomeAdapter(getContext(), updateDishModelList, selectedstationeta, trainno);
+                         recyclerView.setAdapter(adapter);
+                     }
+
                 }
             }
 

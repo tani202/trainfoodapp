@@ -1,9 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- fragment_chef_pending_order.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout android:orientation="vertical" android:layout_height="match_parent" android:layout_width="match_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Card View List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_height="match_parent" android:layout_width="match_parent" android:id="@+id/Swipe_layout">
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <!-- Detail View -->
+    <LinearLayout
+        android:id="@+id/detail_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-</LinearLayout>
+        <!-- Add your detail view UI components here -->
+        <!-- Example: TextViews to display order details -->
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+
+    </LinearLayout>
+
+</RelativeLayout>

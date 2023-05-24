@@ -2,21 +2,27 @@ package my.trainfooddelivery.app;
 
 public class UpdateDishModel {
 
-    String Dishes,RandomUID,Description,Quantity,Price,ImageURL,Restaurant;
+    String Dishes,RandomUID,Description,Quantity,Price,ImageURL,Restaurant,eta,name,mobile,trainno;
+   private boolean isCheckedAvailability;
 
     // Press Alt+insert
       public UpdateDishModel()
       {
 
       }
-    public UpdateDishModel(String  dish,String desc,String randomuid,String quan,String price,String image,String restaurant){
+    public UpdateDishModel(String  dish,String desc,String randomuid,String quantity,String price,String image,String restaurant,String eta,boolean ischecked,String name, String mobile,String trainno){
         Dishes=dish;
         RandomUID=randomuid;
         Description=desc;
-        Quantity=quan;
+        Quantity=quantity;
         Price=price;
         ImageURL=image;
         Restaurant=restaurant;
+        eta=eta;
+        isCheckedAvailability=ischecked;
+        name=name;
+        mobile=mobile;
+        trainno=trainno;
     }
 
     public String getDishes() {
@@ -67,9 +73,39 @@ public class UpdateDishModel {
         ImageURL = imageURL;
     }
 
-    public void setRestaurant(String restaurant){  Restaurant=restaurant;;}
+    public void setRestaurant(String restaurant){  Restaurant=restaurant;}
 
     public String getRestaurant(){ return Restaurant ;}
 
+    public void setEta(String eta) {
+        this.eta = eta;
+    }
 
+    public String getEta() {
+        return eta;
+    }
+
+    public boolean getAvailability() {
+        return isCheckedAvailability;
+    }
+
+    public void setAvailability(boolean isCheckedAvailability) {
+        this.isCheckedAvailability = isCheckedAvailability;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTrainno() {
+        return trainno;
+    }
+
+    public void setTrainno(String trainno) {
+        this.trainno = trainno;
+    }
 }

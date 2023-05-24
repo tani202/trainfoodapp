@@ -39,10 +39,10 @@ public class DeliveryFoodPanel_BottomNavigation extends AppCompatActivity implem
                 fragment=new DeliveryPendingOrderFragment();
                 break;
         }
-        return loaddeliveryfragment(fragment);
+        return loadelfragment(fragment);
     }
 
-    private boolean loaddeliveryfragment(Fragment fragment) {
+    private boolean loadelfragment(Fragment fragment) {
         if(fragment != null){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
             return true;

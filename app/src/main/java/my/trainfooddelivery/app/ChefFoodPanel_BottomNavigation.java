@@ -18,6 +18,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import my.trainfooddelivery.app.ChefFoodPanel.ChefHomeFragment;
 import my.trainfooddelivery.app.ChefFoodPanel.ChefOrderFragment;
 import my.trainfooddelivery.app.ChefFoodPanel.ChefPendingOrderFragment;
+import my.trainfooddelivery.app.ChefFoodPanel.ChefPostFragment;
 import my.trainfooddelivery.app.ChefFoodPanel.ChefProfileFragment;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import my.trainfooddelivery.app.ChefFoodPanel.ChefHomeFragment;
 import my.trainfooddelivery.app.ChefFoodPanel.ChefOrderFragment;
 import my.trainfooddelivery.app.ChefFoodPanel.ChefPendingOrderFragment;
-import my.trainfooddelivery.app.ChefFoodPanel.ChefProfileFragment;
+import my.trainfooddelivery.app.ChefFoodPanel.ChefPostFragment;
 
 public class ChefFoodPanel_BottomNavigation extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -57,9 +58,11 @@ public class ChefFoodPanel_BottomNavigation extends AppCompatActivity implements
             case R.id.Orders:
                 fragment=new ChefOrderFragment();
                 break;
+            case R.id.chefPost:
+                fragment=new ChefPostFragment();
+                break;
             case R.id.chefProfile:
                 fragment=new ChefProfileFragment();
-                break;
         }
         return loadcheffragment(fragment);
     }

@@ -8,6 +8,6 @@
 
     <item android:title="Orders" android:icon="@drawable/ic_baseline_restaurant_menu_24" android:id="@+id/Orders"/>
 
-    <item android:title="Post" android:icon="@drawable/ic_baseline_assignment_24" android:id="@+id/chefProfile"/>
-
+    <item android:title="Post" android:icon="@drawable/ic_baseline_assignment_24" android:id="@+id/chefPost"/>
+    <item android:title="Profile" android:icon="@drawable/ic_baseline_person_24" android:id="@+id/chefProfile"/>
 </menu>

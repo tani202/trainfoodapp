@@ -150,9 +150,9 @@ public class Registration extends AppCompatActivity {
 
                                         HashMap<String , String> hashMap1 = new HashMap<>();
 
-                                        hashMap1.put("Mobile No",mobile);
-                                        hashMap1.put("First Name",fname);
-                                        hashMap1.put("Last Name",lname);
+                                        hashMap1.put("MobileNo",mobile);
+                                        hashMap1.put("FirstName",fname);
+                                        hashMap1.put("LastName",lname);
                                         hashMap1.put("EmailId",emailid);
                                         hashMap1.put("City",cityy);
                                         hashMap1.put("Area",Area);

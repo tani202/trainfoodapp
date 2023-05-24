@@ -43,7 +43,7 @@ public class Delivery_Registration extends AppCompatActivity {
     FirebaseAuth FAuth;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
-    String fname,lname,emailid,password,confpassword,mobile,house,Area,Pincode,statee,cityy;
+    String fname,lname,emailid,password,confpassword,mobile,house,Area,Pincode,statee,cityy,stateName,stateCode,selectedState;
     String role="DeliveryPerson";
 
     @Override
@@ -68,6 +68,11 @@ public class Delivery_Registration extends AppCompatActivity {
         Phone = (Button)findViewById(R.id.Phonenumber);
 
         Cpp = (CountryCodePicker)findViewById(R.id.ctrycode);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.State, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Statespin.setAdapter(adapter);
+
 
         Statespin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -130,6 +135,13 @@ public class Delivery_Registration extends AppCompatActivity {
                 house = houseno.getEditText().getText().toString().trim();
                 Pincode = pincode.getEditText().getText().toString().trim();
 
+                selectedState = Statespin.getSelectedItem().toString();
+                String[] stateParts = selectedState.split(",");
+                stateName = stateParts[0];
+                stateCode = stateParts[1];
+
+
+
                 if (isValid()){
                     final ProgressDialog mDialog = new ProgressDialog(Delivery_Registration.this);
                     mDialog.setCancelable(false);
@@ -159,7 +171,7 @@ public class Delivery_Registration extends AppCompatActivity {
                                         hashMap1.put("Area",Area);
                                         hashMap1.put("Password",password);
                                         hashMap1.put("Pincode",Pincode);
-                                        hashMap1.put("State",statee);
+                                        hashMap1.put("State",stateCode);
                                         hashMap1.put("Confirm Password",confpassword);
                                         hashMap1.put("House",house);
 

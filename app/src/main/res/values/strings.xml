@@ -2,11 +2,11 @@
     <string name="app_name">FoodEngine</string>
 
 
-<!--    <string-array name="State">-->
-<!--        <item>Maharashtra,MH</item>-->
-<!--        <item>Goa</item>-->
+    <!--    <string-array name="State">-->
+    <!--        <item>Maharashtra,MH</item>-->
+    <!--        <item>Goa</item>-->
 
-<!--    </string-array>-->
+    <!--    </string-array>-->
     <string-array name="State">
         <item>Andhra Pradesh,AP </item>
         <item>Arunachal Pradesh,AR</item>
@@ -121,6 +121,9 @@
         <item>Hyderabadi Chicken Biryni</item>
 
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="eta_format">ETA:%s</string>
 
 
 </resources>
