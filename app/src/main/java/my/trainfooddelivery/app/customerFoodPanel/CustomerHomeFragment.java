@@ -93,7 +93,6 @@ public class CustomerHomeFragment extends Fragment {
                          int nullUidCount = 0;
                          UpdateDishModel models = new UpdateDishModel();
                          String randomUID = dish.child("RandomUID").getValue(String.class);
-
                          models.setRandomUID(dish.child("RandomUID").getValue(String.class));
                          models.setDishes(dish.child("Dishes").getValue(String.class));
                          models.setPrice(dish.child("Price").getValue(String.class));

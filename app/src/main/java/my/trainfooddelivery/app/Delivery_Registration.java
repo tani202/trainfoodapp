@@ -33,8 +33,6 @@ import java.util.HashMap;
 
 public class Delivery_Registration extends AppCompatActivity {
 
-    String[] Maharashtra = {"Mumbai","Pune","Nashik"};
-    String[] Madhyapradesh = {"Bhopal","Indore","Ujjain"};
 
     TextInputLayout Fname,Lname,Email,Pass,cpass,mobileno,houseno,area,pincode;
     Spinner Statespin,Cityspin;
@@ -43,7 +41,7 @@ public class Delivery_Registration extends AppCompatActivity {
     FirebaseAuth FAuth;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
-    String fname,lname,emailid,password,confpassword,mobile,house,Area,Pincode,statee,cityy,stateName,stateCode,selectedState;
+    String fname,lname,emailid,password,confpassword,mobile,house,Area,Pincode,statee,cityy,stateName,stateCode,selectedState,upper;
     String role="DeliveryPerson";
 
     @Override
@@ -60,64 +58,21 @@ public class Delivery_Registration extends AppCompatActivity {
         houseno = (TextInputLayout)findViewById(R.id.Houseno);
         pincode = (TextInputLayout)findViewById(R.id.Pincodee);
         Statespin = (Spinner) findViewById(R.id.State);
-        Cityspin = (Spinner) findViewById(R.id.City);
         area = (TextInputLayout)findViewById(R.id.Areaa);
 
         signup = (Button)findViewById(R.id.Signupp);
         Emaill = (Button)findViewById(R.id.emaillid);
         Phone = (Button)findViewById(R.id.Phonenumber);
 
-        Cpp = (CountryCodePicker)findViewById(R.id.ctrycode);
+
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.State, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Statespin.setAdapter(adapter);
 
 
-        Statespin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                Object value = parent.getItemAtPosition(position);
-                statee = value.toString().trim();
-                if(statee.equals("Maharashtra")){
-                    ArrayList<String> list = new ArrayList<>();
-                    for (String cities : Maharashtra){
-                        list.add(cities);
-                    }
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Delivery_Registration.this,android.R.layout.simple_spinner_item,list);
-                    Cityspin.setAdapter(arrayAdapter);
-                }
-                if(statee.equals("Madhyapradesh")){
-                    ArrayList<String> list = new ArrayList<>();
-                    for (String cities : Madhyapradesh){
-                        list.add(cities);
-                    }
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Delivery_Registration.this,android.R.layout.simple_spinner_item,list);
-                    Cityspin.setAdapter(arrayAdapter);
-                }
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        Cityspin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Object value = parent.getItemAtPosition(position);
-                cityy = value.toString().trim();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         databaseReference = firebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users");
         FAuth = FirebaseAuth.getInstance();
@@ -139,6 +94,8 @@ public class Delivery_Registration extends AppCompatActivity {
                 String[] stateParts = selectedState.split(",");
                 stateName = stateParts[0];
                 stateCode = stateParts[1];
+                upper=Area.toUpperCase();
+
 
 
 
@@ -163,12 +120,11 @@ public class Delivery_Registration extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
 
                                         HashMap<String , String> hashMap1 = new HashMap<>();
-                                        hashMap1.put("Mobile No",mobile);
-                                        hashMap1.put("First Name",fname);
-                                        hashMap1.put("Last Name",lname);
+                                        hashMap1.put("MobileNo",mobile);
+                                        hashMap1.put("FirstName",fname);
+                                        hashMap1.put("LastName",lname);
                                         hashMap1.put("EmailId",emailid);
-                                        hashMap1.put("City",cityy);
-                                        hashMap1.put("Area",Area);
+                                        hashMap1.put("Area",upper);
                                         hashMap1.put("Password",password);
                                         hashMap1.put("Pincode",Pincode);
                                         hashMap1.put("State",stateCode);

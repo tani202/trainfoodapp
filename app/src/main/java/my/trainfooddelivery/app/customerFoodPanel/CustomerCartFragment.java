@@ -1,11 +1,14 @@
 package my.trainfooddelivery.app.customerFoodPanel;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +48,7 @@ public class CustomerCartFragment extends Fragment {
     private List<UpdateDishModel> updateCartList;
     private CustomerCartAdapter adapter;
     private Button placeorder;
-    private String name,last,mobile;
+    private String name, last, mobile;
     DatabaseReference dataa;
     Boolean isOrderAvailable;
 
@@ -58,29 +61,13 @@ public class CustomerCartFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         updateCartList = new ArrayList<>();
-        placeorder=v.findViewById(R.id.place_order_button);
-
+        placeorder = v.findViewById(R.id.place_order_button);
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference database = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("ORDERS");
-//        long sixHoursAgoTimestamp = (System.currentTimeMillis() / 1000) - (6* 60 * 60);
-//        long unixTime = System.currentTimeMillis() / 1000L;
-//        String sixHoursAgoString = Long.toString(sixHoursAgoTimestamp);
 
-// Convert unixTime to string
-
-// Query dishes ordered within the past 6 hours
-//        Query latestDishesQuery = database.child(userId)
-//                .orderByKey();
-
-
-//        long currentTime = System.currentTimeMillis();
-//        long fourHoursAgo = currentTime - (10 * 60 * 1000); // 4 hours ago in milliseconds
-//        Log.d("time","10 min"+fourHoursAgo);
         Query latestDishesQuery = database.child(userId)
                 .orderByChild("timestamp");
-
-
 
         latestDishesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -98,16 +85,11 @@ public class CustomerCartFragment extends Fragment {
                     cart.setEta(dishSnapshot.child("mEta").getValue(String.class));
                     cart.setTrainno(dishSnapshot.child("trainno").getValue(String.class));
                     updateCartList.add(cart);
-
-
-
-
                 }
-//                    Collections.reverse(updateCartList);
-                adapter = new CustomerCartAdapter(getContext(), updateCartList,userId);
+
+                adapter = new CustomerCartAdapter(getContext(), updateCartList, userId);
                 recyclerView.setAdapter(adapter);
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -115,91 +97,116 @@ public class CustomerCartFragment extends Fragment {
             }
         });
 
-
-
         placeorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference availableOrdersRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("AVAILABLE ORDERS");
-                DatabaseReference placedOrdersRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("PLACED ORDERS");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Enter Seat and Coach Details");
 
-                // Get the current user's ID
-                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_seat_coach, null);
+                builder.setView(dialogView);
 
-                availableOrdersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                EditText seatNumberEditText = dialogView.findViewById(R.id.edit_seat_number);
+                EditText coachEditText = dialogView.findViewById(R.id.edit_coach);
+
+                builder.setPositiveButton("Place Order", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        boolean isOrderAvailable = false;
-                        for (DataSnapshot restaurantSnapshot : snapshot.getChildren()) {
-                            String restaurantName = restaurantSnapshot.getKey();
-                            for (DataSnapshot customerSnapshot : restaurantSnapshot.getChildren()) {
-                                String customerID = customerSnapshot.getKey();
-                                if (customerID.equals(userID)) {
-                                    isOrderAvailable = true;
-                                    DatabaseReference customerOrderRef = placedOrdersRef.child(restaurantName).child(customerID);
+                    public void onClick(DialogInterface dialog, int which) {
+                        String seatNumber = seatNumberEditText.getText().toString().trim();
+                        String coach = coachEditText.getText().toString().trim();
 
-                                    // Get customer details from the "users" node
-                                    DatabaseReference userDataRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(userID);
-                                    userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            Customer cust = snapshot.getValue(Customer.class);
-                                            if (cust != null) {
-                                                name = cust.getFirstName() + " " + cust.getLastName();
-                                                mobile = cust.getMobileNo();
-                                                Log.d("name", "name" + name);
-                                                Log.d("mobile", "mobile" + mobile);
-
-                                                customerOrderRef.child("CustomerName").setValue(name);
-                                                customerOrderRef.child("MobileNo").setValue(mobile);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            // Handle any errors here
-                                        }
-                                    });
-
-                                    // Move dish data from "AVAILABLE ORDERS" to "PLACED ORDERS"
-                                    for (DataSnapshot dishSnapshot : customerSnapshot.getChildren()) {
-                                        String dishName = dishSnapshot.getKey();
-                                        UpdateDishModel dish = dishSnapshot.getValue(UpdateDishModel.class);
-                                        if (dish != null) {
-                                            DatabaseReference dishRef = customerOrderRef.child(dishName);
-                                            dishRef.setValue(dish);
-                                        }
-                                    }
-
-                                    // Remove the customer's order from "AVAILABLE ORDERS"
-                                    customerSnapshot.getRef().removeValue();
-                                    Toast.makeText(getContext(), "Order placed successfully!", Toast.LENGTH_SHORT).show();
-
-                                    break; // Exit the loop once the customer's order is found
-                                }
-                            }
+                        if (seatNumber.isEmpty() || coach.isEmpty()) {
+                            Toast.makeText(getContext(), "Please enter seat number and coach details", Toast.LENGTH_SHORT).show();
+                            return;
                         }
 
-                        if (!isOrderAvailable) {
-                            Toast.makeText(getContext(), "Please check availability of the items!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        // Handle any errors here
+                        placeOrder(seatNumber, coach);
                     }
                 });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
-
-
-
-
-
-
         return v;
     }
-}
 
+    private void placeOrder(String seatNumber, String coach) {
+        DatabaseReference availableOrdersRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("AVAILABLE ORDERS");
+        DatabaseReference placedOrdersRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("PLACED ORDERS");
+
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        availableOrdersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean isOrderAvailable = false;
+                for (DataSnapshot restaurantSnapshot : snapshot.getChildren()) {
+                    String restaurantName = restaurantSnapshot.getKey();
+                    for (DataSnapshot customerSnapshot : restaurantSnapshot.getChildren()) {
+                        String customerID = customerSnapshot.getKey();
+                        if (customerID.equals(userID)) {
+                            isOrderAvailable = true;
+                            DatabaseReference customerOrderRef = placedOrdersRef.child(restaurantName).child(customerID);
+
+                            DatabaseReference userDataRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(userID);
+                            userDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Customer cust = snapshot.getValue(Customer.class);
+                                    if (cust != null) {
+                                        name = cust.getFirstName() + " " + cust.getLastName();
+                                        mobile = cust.getMobileNo();
+                                        Log.d("name", "name" + name);
+                                        Log.d("mobile", "mobile" + mobile);
+
+                                        customerOrderRef.child("CustomerName").setValue(name);
+                                        customerOrderRef.child("MobileNo").setValue(mobile);
+                                        customerOrderRef.child("SeatNumber").setValue(seatNumber);
+                                        customerOrderRef.child("Coach").setValue(coach);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    // Handle any errors here
+                                }
+                            });
+                            // Move dish data from "AVAILABLE ORDERS" to "PLACED ORDERS"
+                            for (DataSnapshot dishSnapshot : customerSnapshot.getChildren()) {
+                                String dishName = dishSnapshot.getKey();
+                                UpdateDishModel dish = dishSnapshot.getValue(UpdateDishModel.class);
+                                if (dish != null) {
+                                    DatabaseReference dishRef = customerOrderRef.child(dishName);
+                                    dishRef.setValue(dish);
+                                }
+                            }
+                            // Remove the customer's order from "AVAILABLE ORDERS"
+                            customerSnapshot.getRef().removeValue();
+                            Toast.makeText(getContext(), "Order placed successfully!", Toast.LENGTH_SHORT).show();
+
+                            break;// Exit the loop once the customer's order is found
+                        }
+                    }
+                }
+
+                if (!isOrderAvailable) {
+                    Toast.makeText(getContext(), "Please check availability of the items!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle any errors here
+            }
+        });
+    }
+}

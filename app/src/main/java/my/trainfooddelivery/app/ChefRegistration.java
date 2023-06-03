@@ -34,14 +34,14 @@ import java.util.HashMap;
 public class ChefRegistration extends AppCompatActivity {
 
 
-    TextInputLayout Fname,Lname,Email,Pass,cpass,mobileno,houseno,area,pincode;
+    TextInputLayout Fname,Lname,Email,Pass,cpass,mobileno,houseno,area,pincode,firstname;
     Spinner spinnerStates;
     Button signup, Emaill, Phone;
     CountryCodePicker Cpp;
     FirebaseAuth mAuth;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
-    String fname,lname,emailid,password,confpassword,mobile,house,Area,Pincode,stateCode,cityy,stateName,selectedState;
+    String fname,lname,emailid,password,confpassword,mobile,house,Area,Pincode,stateCode,cityy,stateName,selectedState,upper,Firstname;
     String role="Chef";
 
     @Override
@@ -59,6 +59,7 @@ public class ChefRegistration extends AppCompatActivity {
         pincode = (TextInputLayout)findViewById(R.id.Pincode);
        // Statespin = (Spinner) findViewById(R.id.Statee);
         area = (TextInputLayout)findViewById(R.id.Area);
+        firstname=findViewById(R.id.Fname);
 
         signup = (Button)findViewById(R.id.Signup);
         Emaill = (Button)findViewById(R.id.email);
@@ -82,6 +83,7 @@ public class ChefRegistration extends AppCompatActivity {
 
                 fname = Fname.getEditText().getText().toString().trim();
                 lname = Lname.getEditText().getText().toString().trim();
+                Firstname=firstname.getEditText().getText().toString().trim();
                 emailid = Email.getEditText().getText().toString().trim();
                 mobile = mobileno.getEditText().getText().toString().trim();
                 password = Pass.getEditText().getText().toString().trim();
@@ -94,6 +96,9 @@ public class ChefRegistration extends AppCompatActivity {
                 String[] stateParts = selectedState.split(",");
                 stateName = stateParts[0];
                 stateCode = stateParts[1];
+                upper=Area.toUpperCase();
+                String Fullname=Firstname+" "+lname;
+
 
 
 
@@ -123,9 +128,9 @@ public class ChefRegistration extends AppCompatActivity {
 
                                         hashMap1.put("Mobile No",mobile);
                                         hashMap1.put("Restaurant",fname);
-                                        hashMap1.put("Full Name",lname);
+                                        hashMap1.put("Full Name",Fullname);
                                         hashMap1.put("EmailId",emailid);
-                                        hashMap1.put("Area",Area);
+                                        hashMap1.put("Area",upper);
                                         hashMap1.put("Password",password);
                                         hashMap1.put("Pincode",Pincode);
                                         hashMap1.put("State",stateCode);
@@ -186,6 +191,22 @@ public class ChefRegistration extends AppCompatActivity {
                     });
                 }
 
+            }
+        });
+
+        Emaill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(ChefRegistration.this,Cheflogin.class));
+                finish();
+            }
+        });
+        Phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChefRegistration.this,Chefloginphone.class));
+                finish();
             }
         });
 

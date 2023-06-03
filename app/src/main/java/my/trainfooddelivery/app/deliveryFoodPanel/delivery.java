@@ -2,17 +2,22 @@ package my.trainfooddelivery.app.deliveryFoodPanel;
 
 public class delivery {
 
-    private String State,Area;
+    private String State,Area,FirstName,LastName,MobileNo;
 
     public delivery(){
     }
     // Press Alt+insert
 
 
-    public delivery( String state, String area) {
+    public delivery( String state, String area,String FirstName,String LastName,String mo) {
 
         State = state;
         Area = area;
+        FirstName=FirstName;
+        LastName=LastName;
+        MobileNo=mo;
+
+
 
     }
 
@@ -34,5 +39,27 @@ public class delivery {
         Area = area;
     }
 
+    public String getFirstName() {
+        return FirstName;
+    }
 
+    public void setLastName(String lastName) {
+        LastName = lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        FirstName = firstName;
+    }
+
+    public String getLastName() {
+        return LastName;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        MobileNo = mobileNo;
+    }
+
+    public String getMobileNo() {
+        return MobileNo;
+    }
 }

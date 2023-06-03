@@ -1,7 +1,10 @@
 package my.trainfooddelivery.app;
 
 
-    public class placedorder {
+import java.util.ArrayList;
+import java.util.List;
+
+public class placedorder {
         private String dishes;
         private String price;
         private String quantity;
@@ -9,13 +12,20 @@ package my.trainfooddelivery.app;
         private String trainno;
         private String CustomerName;
         private String MobileNo;
-
+        private String Totalprice;
+    private String SeatNumber;
+    private String Coach;
+    private String Restaurant;
+    private String Phone;
+    private String Userid;
+         private List<placedorder>DishList;
 
         public placedorder() {
             // Default constructor required for calls to DataSnapshot.getValue(Order.class)
         }
 
-        public placedorder(String dishName, String price, String quantity, String eta,String name,String mobile, String trainno) {
+        public placedorder(String dishName, String price, String quantity, String eta,String name,String mobile, String trainno,String totalprice,String seatnumber,
+     String coach,String rname,String phone,String userid) {
             this.dishes = dishName;
             this.price = price;
             this.quantity = quantity;
@@ -23,6 +33,14 @@ package my.trainfooddelivery.app;
             this.trainno = trainno;
             this.CustomerName=name;
             this.MobileNo=mobile;
+            this.Totalprice=totalprice;
+            this.DishList = new ArrayList<>();
+            this.DishList.add(this);
+            this.SeatNumber=seatnumber;
+            this.Coach=coach;
+            this.Restaurant=rname;
+            this.Phone=phone;
+            this.Userid=userid;
         }
 
         public void setprice(String price )
@@ -81,7 +99,63 @@ package my.trainfooddelivery.app;
         public void setCustomerName(String customerName) {
             CustomerName = customerName;
         }
+
+        public void setDishList(List<placedorder> existingDishList) {
+        }
+
+        public List<placedorder>getDishList()
+        {
+            return DishList;
+        }
+
+
+    public void setTotalPrice(String totalprice) {
+            Totalprice=totalprice;
     }
 
+    public String getTotalPrice() {
+        return Totalprice;
+    }
+
+    public String getCoach() {
+        return Coach;
+    }
+
+    public String getSeatNumber() {
+        return SeatNumber;
+    }
+
+    public void setSeatNumber(String seatNumber) {
+        SeatNumber = seatNumber;
+    }
+
+    public void setCoach(String coach) {
+        Coach = coach;
+    }
+
+    public void setPhone(String phone) {
+        Phone = phone;
+    }
+
+    public void setRestaurant(String restaurant) {
+        Restaurant = restaurant;
+    }
+
+    public String getRestaurant() {
+        return Restaurant;
+    }
+
+    public String getPhone() {
+        return Phone;
+    }
+
+    public void setUserid(String userid) {
+        Userid = userid;
+    }
+
+    public String getUserid() {
+        return Userid;
+    }
+}
 
 

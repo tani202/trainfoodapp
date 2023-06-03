@@ -5,15 +5,17 @@ public class LocationData {
     private  double latitude;
     private  double longtitude;
     private long  timestamp;
+    private String name;
 
 
 
 
-    public LocationData( double lat, double  longtitude,long timestamp)
+    public LocationData( double lat, double  longtitude,long timestamp,String name)
         {
             this.latitude=lat;
             this.longtitude=longtitude;
             this.timestamp=timestamp;
+            this.name=name;
         }
 
     public double getLatitude() {
@@ -38,6 +40,14 @@ public class LocationData {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }
 

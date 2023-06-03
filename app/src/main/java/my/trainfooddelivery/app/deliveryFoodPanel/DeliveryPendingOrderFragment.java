@@ -1,5 +1,9 @@
 package my.trainfooddelivery.app.deliveryFoodPanel;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
+import my.trainfooddelivery.app.CustomerHomeAdapter;
+import my.trainfooddelivery.app.DeliverypendingAdapter;
+import my.trainfooddelivery.app.UpdateDishModel;
 import my.trainfooddelivery.app.deliveryFoodPanel.delivery;
 import my.trainfooddelivery.app.deliveryFoodPanel.LocationData;
 import android.Manifest;
@@ -41,11 +45,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,16 +62,24 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import my.trainfooddelivery.app.MainMenu;
 import my.trainfooddelivery.app.R;
+import my.trainfooddelivery.app.placedorder;
 
 
 public class DeliveryPendingOrderFragment extends Fragment implements IBaseGpsListener {
     private  Button available;
     private static final int PERMISSION_LOCATION = 1;
-    DatabaseReference locationRef,dataa;
-    private String Area, State;
+    DatabaseReference locationRef,dataa,databaseReference;
+    private String mob ,name,State,Area,devname,userid;
     long timestamp;
+    RecyclerView recyclerView;
+    private List<placedorder> updateDishModelList;
+    private DeliverypendingAdapter adapter;
 
 
     @Nullable
@@ -75,6 +90,10 @@ public class DeliveryPendingOrderFragment extends Fragment implements IBaseGpsLi
         getActivity().setTitle("Pending Orders");
         setHasOptionsMenu(true);
         available=v.findViewById(R.id.available);
+        recyclerView = v.findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        updateDishModelList = new ArrayList<>();
 
         available.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,8 +109,92 @@ public class DeliveryPendingOrderFragment extends Fragment implements IBaseGpsLi
             }
         });
 
+
+         userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        dataa = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(userid);
+        dataa.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                delivery dev = snapshot.getValue(delivery.class);
+                if (dev != null) {
+                    String first=dev.getFirstName();
+                    String last=dev.getLastName();
+                    mob=dev.getMobileNo();
+                    devname=first+" "+last;
+                    Log.d("mobile of del","del"+mob);
+
+
+
+                } else {
+                    Log.d("error", "no fetch");
+
+                }
+
+                databaseReference = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("assigned delivery");
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot orders: dataSnapshot.getChildren()) {
+                            String orderid=orders.getKey();
+                            Log.d("orderid", "ID"+orderid);
+                            for (DataSnapshot deliverySnapshot : orders.getChildren()) {
+                                String key = deliverySnapshot.getKey();
+                                Log.d("orderid", "key"+key);
+                                assert key != null;
+                                if(key.equals(userid)) {
+                                    placedorder models = new placedorder();
+                                    models.setCustomerName(deliverySnapshot.child("customerName").getValue(String.class));
+                                    models.setdishes(deliverySnapshot.child("dishes").getValue(String.class));
+                                    models.setTotalPrice(deliverySnapshot.child("totalPrice").getValue(String.class));
+                                    models.seteta(deliverySnapshot.child("eta").getValue(String.class));
+                                    models.setRestaurant(deliverySnapshot.child("restaurant").getValue(String.class));
+                                    models.setMobileNo(deliverySnapshot.child("mobileNo").getValue(String.class));
+                                    models.setSeatNumber(deliverySnapshot.child("seatNumber").getValue(String.class));
+                                    models.settraino(deliverySnapshot.child("trainno").getValue(String.class));
+                                    models.setCoach(deliverySnapshot.child("coach").getValue(String.class));
+                                    models.setUserid(deliverySnapshot.child("userid").getValue(String.class));
+
+                                    updateDishModelList.add(models);
+                                    adapter = new DeliverypendingAdapter(getContext(),updateDishModelList,userid,mob,devname,orderid);
+
+                                    recyclerView.setAdapter(adapter);
+
+                                }
+
+
+                            }
+
+
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+
+
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("onDataChange: ", "Failed to read value.", error.toException());
+            }
+        });
+
+
+
+
+
+
         return v;
     }
+
     private void requestLocationPermission() {
         ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION);
     }
@@ -125,10 +228,18 @@ public class DeliveryPendingOrderFragment extends Fragment implements IBaseGpsLi
                 if (del != null) {
                     State = del.getState();
                     Area = del.getArea();
+                    String Fname=del.getFirstName();
+                    String Lname=del.getLastName();
+                    name=Fname+" "+Lname;
                     Log.d("state","state"+State);
                     Log.d("area","area"+Area);
+                    Log.d("name","name"+name);
 
 
+                }
+                else
+                {
+                    Log.e("error","error");
                 }
                 timestamp=System.currentTimeMillis();
 
@@ -136,7 +247,7 @@ public class DeliveryPendingOrderFragment extends Fragment implements IBaseGpsLi
 
 
                 // Create a new Location object
-                LocationData locationData = new LocationData(latitude, longitude,timestamp);
+                LocationData locationData = new LocationData(latitude, longitude,timestamp,name);
 
                 // Save the location to Firebase
                 locationRef.child(State).child(Area).child(userid).setValue(locationData);
@@ -202,6 +313,8 @@ public class DeliveryPendingOrderFragment extends Fragment implements IBaseGpsLi
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
+
 
 
 }

@@ -17,10 +17,18 @@
 
 </com.google.android.material.textfield.TextInputLayout>
 
+    -<com.google.android.material.textfield.TextInputLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_marginTop="11dp" android:id="@+id/Fname">
+
+    <com.google.android.material.textfield.TextInputEditText android:layout_height="wrap_content" android:layout_width="match_parent" android:inputType="text" android:hint="First Name"/>
+
+</com.google.android.material.textfield.TextInputLayout>
+
 
     -<com.google.android.material.textfield.TextInputLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_marginTop="11dp" android:id="@+id/Lastname">
 
-    <com.google.android.material.textfield.TextInputEditText android:layout_height="wrap_content" android:layout_width="match_parent" android:inputType="text" android:hint="FullName"/>
+    <com.google.android.material.textfield.TextInputEditText android:layout_height="wrap_content" android:layout_width="match_parent" android:inputType="text" android:hint="Last Name"/>
+
+
 
 </com.google.android.material.textfield.TextInputLayout>
 

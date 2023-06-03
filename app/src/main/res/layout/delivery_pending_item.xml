@@ -23,7 +23,7 @@
             android:layout_marginBottom="8dp">
 
             <TextView
-                android:id="@+id/fooddetails"
+                android:id="@+id/food"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="res"
@@ -31,42 +31,78 @@
                 android:textStyle="bold" />
 
 
-
-
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/finalprice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="res"
-            android:textSize="18sp"
-            android:textStyle="bold" />
 
 
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/hotelname"
+                android:layout_width="191dp"
+                android:layout_height="wrap_content"
+                android:text="res"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tprice"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:text="res"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginBottom="8dp">
 
 
             <TextView
-                android:id="@+id/eta"
-                android:layout_width="wrap_content"
+                android:id="@+id/ETA"
+                android:layout_width="98dp"
                 android:layout_height="match_parent"
                 android:text="res"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/trainno"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="50dp"
+                android:id="@+id/trainumber"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
                 android:text="res"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/seat"
+                android:layout_width="81dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:text="res"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/coach"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:text="res"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
 
         </LinearLayout>
 
@@ -75,11 +111,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="8dp"
             >
 
             <TextView
-                android:id="@+id/customer_name"
-                android:layout_width="wrap_content"
+                android:id="@+id/customername"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="0dp"
                 android:text="res"
@@ -87,7 +124,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/customer_mobile"
+                android:id="@+id/cmobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -103,34 +140,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btn_view_details"
-                android:layout_width="match_parent"
+                android:id="@+id/accept"
+                android:layout_width="178dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="4dp"
-                android:text="Prepare and Select Delivery Person"
+                android:background="@color/blueish"
+                android:text="Accept order"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtbox"
+
+            <Button
+                android:id="@+id/reject"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Select a Delivery Person "
+                android:layout_height="50dp"
+                android:layout_marginStart="4dp"
+                android:background="@color/Red"
+                android:drawable="@drawable/button_shape"
+                android:text="Reject order"
+                android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:textStyle="bold"
-                android:visibility="gone"/>
+                android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/spinner_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:visibility="gone" />
         </LinearLayout>
 
 

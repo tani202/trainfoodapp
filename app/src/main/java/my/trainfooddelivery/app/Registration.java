@@ -219,6 +219,23 @@ public class Registration extends AppCompatActivity {
             }
         });
 
+        Emaill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(Registration.this,Login.class));
+                finish();
+            }
+        });
+        Phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Registration.this,Loginphone.class));
+                finish();
+            }
+        });
+
+
 
 
     }

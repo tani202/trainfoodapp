@@ -25,7 +25,7 @@ public class CustomerProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_chef_home,null);
+        View v = inflater.inflate(R.layout.fragment_customerprofile,null);
         getActivity().setTitle("Profile");
         setHasOptionsMenu(true);
         return v;
