@@ -113,6 +113,8 @@ public class CustomerCartAdapter extends RecyclerView.Adapter<CustomerCartAdapte
 
         }
         else  {
+            holder.checkAvailabilityBtn.setBackgroundColor(ContextCompat.getColor(context, R.color.Red));
+
             String useridd = FirebaseAuth.getInstance().getCurrentUser().getUid();
             Log.d("uid","user"+useridd);
             Log.d("uid","user"+cart.getDishes());

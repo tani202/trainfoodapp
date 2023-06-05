@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +53,7 @@ public class CustomerCartFragment extends Fragment {
     private Button placeorder;
     private String name, last, mobile;
     DatabaseReference dataa;
-    Boolean isOrderAvailable;
+    Boolean isOrderAvailable,deliveryperson;
 
     @Nullable
     @Override
@@ -103,6 +106,7 @@ public class CustomerCartFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Enter Seat and Coach Details");
 
+
                 View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_seat_coach, null);
                 builder.setView(dialogView);
 
@@ -132,6 +136,7 @@ public class CustomerCartFragment extends Fragment {
                 });
 
                 AlertDialog dialog = builder.create();
+                dialog.setCancelable(false);
                 dialog.show();
             }
         });
@@ -155,6 +160,7 @@ public class CustomerCartFragment extends Fragment {
                         String customerID = customerSnapshot.getKey();
                         if (customerID.equals(userID)) {
                             isOrderAvailable = true;
+                            deliveryperson=false;
                             DatabaseReference customerOrderRef = placedOrdersRef.child(restaurantName).child(customerID);
 
                             DatabaseReference userDataRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("users").child(userID);
@@ -172,6 +178,7 @@ public class CustomerCartFragment extends Fragment {
                                         customerOrderRef.child("MobileNo").setValue(mobile);
                                         customerOrderRef.child("SeatNumber").setValue(seatNumber);
                                         customerOrderRef.child("Coach").setValue(coach);
+                                        customerOrderRef.child("Deliveryperson").setValue(deliveryperson);
                                     }
                                 }
 
@@ -180,18 +187,25 @@ public class CustomerCartFragment extends Fragment {
                                     // Handle any errors here
                                 }
                             });
+                            List<UpdateDishModel> selectedItems = new ArrayList<>();
+                            int totalPrice = 0;
                             // Move dish data from "AVAILABLE ORDERS" to "PLACED ORDERS"
                             for (DataSnapshot dishSnapshot : customerSnapshot.getChildren()) {
                                 String dishName = dishSnapshot.getKey();
                                 UpdateDishModel dish = dishSnapshot.getValue(UpdateDishModel.class);
                                 if (dish != null) {
+                                    int price = Integer.parseInt(dish.getPrice());
                                     DatabaseReference dishRef = customerOrderRef.child(dishName);
                                     dishRef.setValue(dish);
+                                    selectedItems.add(dish);
+                                    totalPrice=totalPrice+price;
                                 }
                             }
+                            String totalPriceString = String.valueOf(totalPrice);
                             // Remove the customer's order from "AVAILABLE ORDERS"
                             customerSnapshot.getRef().removeValue();
-                            Toast.makeText(getContext(), "Order placed successfully!", Toast.LENGTH_SHORT).show();
+                            showOrderDetailsPopup(selectedItems, totalPriceString,restaurantName,customerID);
+
 
                             break;// Exit the loop once the customer's order is found
                         }
@@ -209,4 +223,96 @@ public class CustomerCartFragment extends Fragment {
             }
         });
     }
+
+    private void showOrderDetailsPopup(List<UpdateDishModel> selectedItems, String totalPriceString,String res,String id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Order Details");
+
+        LinearLayout layout = new LinearLayout(getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        DatabaseReference placedOrdersRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("PLACED ORDERS");
+        DatabaseReference customerOrderRef = placedOrdersRef.child(res).child(id);
+
+
+        // Section 2: Selected Items
+        TextView selectedItemsTextView = new TextView(getContext());
+        StringBuilder selectedItemsText = new StringBuilder();
+        for (UpdateDishModel item : selectedItems) {
+            selectedItemsText.append(item.getDishes()).append(" - ")
+                    .append("Price: ").append(item.getPrice()).append(", ")
+                    .append("Quantity: ").append(item.getQuantity()).append("\n");
+        }
+        selectedItemsTextView.setText(selectedItemsText.toString());
+        layout.addView(selectedItemsTextView);
+
+        // Section 3: Total Price
+        TextView totalPriceTextView = new TextView(getContext());
+        totalPriceTextView.setText("Total Price: " + totalPriceString);
+        layout.addView(totalPriceTextView);
+
+        // Section 4: Payment Method
+        RadioGroup paymentMethodRadioGroup = new RadioGroup(getContext());
+        paymentMethodRadioGroup.setOrientation(LinearLayout.VERTICAL);
+
+        RadioButton cashRadioButton = new RadioButton(getContext());
+        cashRadioButton.setText("Cash on Delivery");
+        paymentMethodRadioGroup.addView(cashRadioButton);
+
+        RadioButton cardRadioButton = new RadioButton(getContext());
+        cardRadioButton.setText("Credit/Debit on Delivery");
+        paymentMethodRadioGroup.addView(cardRadioButton);
+
+
+        layout.addView(paymentMethodRadioGroup);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("Confirm Order", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+
+                    int selectedPaymentId = paymentMethodRadioGroup.getCheckedRadioButtonId();
+                    String paymentMethod;
+
+                    if (selectedPaymentId == cashRadioButton.getId()) {
+                        paymentMethod = "Cash on Delivery";
+
+                    }
+                    else if(selectedPaymentId == cardRadioButton.getId()){
+                        paymentMethod="Credit/Debit on Delivery";
+
+
+                }
+                    else {
+                        Toast.makeText(getContext(), "Please select a payment method", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                customerOrderRef.child("Payment").setValue(paymentMethod);
+
+
+                Toast.makeText(getContext(), "Order placed successfully!", Toast.LENGTH_SHORT).show();
+
+                }
+
+        });
+
+        builder.setNegativeButton("Cancel Order", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                customerOrderRef.removeValue();
+                Toast.makeText(getContext(), "Order canceled successfully!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
+
 }

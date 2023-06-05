@@ -59,7 +59,7 @@ public class Delivery_Registration extends AppCompatActivity {
         pincode = (TextInputLayout)findViewById(R.id.Pincodee);
         Statespin = (Spinner) findViewById(R.id.State);
         area = (TextInputLayout)findViewById(R.id.Areaa);
-
+        Cpp = (CountryCodePicker)findViewById(R.id.ctrycode);
         signup = (Button)findViewById(R.id.Signupp);
         Emaill = (Button)findViewById(R.id.emaillid);
         Phone = (Button)findViewById(R.id.Phonenumber);
@@ -152,7 +152,7 @@ public class Delivery_Registration extends AppCompatActivity {
 
                                                                             dialog.dismiss();
 
-                                                                            String phonenumber = Cpp.getSelectedCountryCodeWithPlus() + mobile;
+                                                                            String phonenumber = Cpp.getSelectedCountryCodeWithPlus()+mobile;
                                                                             Intent b = new Intent(Delivery_Registration.this,Delivery_VerifyPhone.class);
                                                                             b.putExtra("phonenumber",phonenumber);
                                                                             startActivity(b);

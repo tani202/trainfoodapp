@@ -121,6 +121,7 @@ public class CustomerHomeAdapter extends RecyclerView.Adapter<CustomerHomeAdapte
             public void onClick(View v) {
                 holder.cartButton.setBackgroundColor(ContextCompat.getColor(mcontext, R.color.green));
                 int selectedQuantity = holder.quantity.getSelectedItemPosition() + 1;
+                Log.d("selected","select"+selectedQuantity);
                 DatabaseReference database = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("ORDERS");
 //                String quan=updateDishModel.getQuantity();
                 String res=updateDishModel.getRestaurant();

@@ -154,6 +154,7 @@ public class DeliveryPendingOrderFragment extends Fragment implements IBaseGpsLi
                                     models.settraino(deliverySnapshot.child("trainno").getValue(String.class));
                                     models.setCoach(deliverySnapshot.child("coach").getValue(String.class));
                                     models.setUserid(deliverySnapshot.child("userid").getValue(String.class));
+                                    models.setPayment(deliverySnapshot.child("payment").getValue(String.class));
 
                                     updateDishModelList.add(models);
                                     adapter = new DeliverypendingAdapter(getContext(),updateDishModelList,userid,mob,devname,orderid);

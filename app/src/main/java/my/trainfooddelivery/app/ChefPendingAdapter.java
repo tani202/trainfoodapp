@@ -59,24 +59,21 @@ public class ChefPendingAdapter extends RecyclerView.Adapter<ChefPendingAdapter.
     private List<placedorder> updateDishModellist;
     private static final int PERMISSION_LOCATION = 1;
     private double latitude;
-    private DatabaseReference pendingDeliveryRef;
+    private DatabaseReference pendingDeliveryRef,placed;
     private double longitude;
     DatabaseReference locationRef, dataa;
     String Area, Code;
-    Boolean fulllist=false;
+    Boolean fulllist = false;
     List<Double> distanceList = new ArrayList<>();
     List<String> names = new ArrayList<>();
     List<String> userIds = new ArrayList<>();
-    private int selectedPosition = -1;
     private String selectedUserId = null;
-
 
 
     public ChefPendingAdapter(Activity context, List<placedorder> updateDishModelslist) {
 
         this.updateDishModellist = updateDishModelslist;
-        this.mcontext=context;
-
+        this.mcontext = context;
 
 
     }
@@ -96,13 +93,22 @@ public class ChefPendingAdapter extends RecyclerView.Adapter<ChefPendingAdapter.
         final placedorder updateDishModel = updateDishModellist.get(position);
 
         //holder.distanceSpinner.setEnabled(false);
-        holder.finalprice.setText("Grand total"+updateDishModel.getTotalPrice());
-        holder.fooddetails.setText(""+updateDishModel.getdishes());
+        holder.finalprice.setText("Grand total" + updateDishModel.getTotalPrice());
+        holder.fooddetails.setText("" + updateDishModel.getdishes());
 
         holder.etaTextView.setText("Eta:" + updateDishModel.geteta());
         holder.trainno.setText("Train no:" + updateDishModel.gettrainno());
         holder.mobile.setText("Mobile: " + updateDishModel.getMobileNo());
         holder.name.setText("Name: " + updateDishModel.getCustomerName());
+
+        if (updateDishModel.getDeliveryperson()) {
+            holder.preparing.setEnabled(false);
+            holder.preparing.setText(" Delivey Person Selected");
+        } else {
+            holder.preparing.setEnabled(true);
+        }
+
+
 
         holder.preparing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +162,7 @@ public class ChefPendingAdapter extends RecyclerView.Adapter<ChefPendingAdapter.
                                     Code = cheff.getState();
                                     Area = cheff.getArea();
 
-                                    long twentyMinutesAgo = System.currentTimeMillis() - (700 * 60 * 1000); // Calculate the timestamp 20 minutes ago
+                                    long twentyMinutesAgo = System.currentTimeMillis() - (1440 * 60 * 1000); // Calculate the timestamp 20 minutes ago
 
                                     Query query = deliveryRef.child(Code).child(Area).orderByChild("timestamp").startAt(twentyMinutesAgo).endAt(System.currentTimeMillis());
 
@@ -170,20 +176,18 @@ public class ChefPendingAdapter extends RecyclerView.Adapter<ChefPendingAdapter.
                                                 int processedOrders = 0;
                                                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                                     String user = userSnapshot.getKey(); // Assuming the user ID is the key of the snapshot
-                                                    String name =userSnapshot.child("name").getValue(String.class);
+                                                    String name = userSnapshot.child("name").getValue(String.class);
                                                     double longti = userSnapshot.child("longtitude").getValue(Double.class);
                                                     double lat = userSnapshot.child("latitude").getValue(Double.class);
                                                     Log.d("long", "longtitude" + longti);
                                                     Log.d("long", "latitude" + lat);
-                                                    calculatedistance(holder, latitude, longitude, lat, longti, totalOrders, ++processedOrders,name,user,updateDishModel);
+                                                    calculatedistance(holder, latitude, longitude, lat, longti, totalOrders, ++processedOrders, name, user, updateDishModel);
 
                                                 }
 
 
-
-
                                             } else {
-                                                Toast.makeText(mcontext,"No delivery Person Available Currently",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(mcontext, "No delivery Person Available Currently", Toast.LENGTH_SHORT).show();
 
                                             }
                                         }
@@ -194,11 +198,6 @@ public class ChefPendingAdapter extends RecyclerView.Adapter<ChefPendingAdapter.
                                             // Handle any errors that occur during the retrieval process
                                         }
                                     });
-
-
-
-
-
 
 
                                 }
@@ -226,12 +225,11 @@ public class ChefPendingAdapter extends RecyclerView.Adapter<ChefPendingAdapter.
             }
 
         });
-
-
-
-
-
     }
+
+
+
+
 
     private String getLocationText(Location location) {
         return "Lat: " + location.getLatitude() + "\nLon: " + location.getLongitude();
@@ -399,6 +397,7 @@ public class ChefPendingAdapter extends RecyclerView.Adapter<ChefPendingAdapter.
                                     pendingDeliveryRef.child(cardViewId).removeValue();
 
 
+
                                     selectedUserId = userIds.get(position);
                                     // Create a new order detail for the selected user
                                     pendingDeliveryRef.child(cardViewId).child(selectedUserId).setValue(updatedishmodel);
@@ -408,7 +407,31 @@ public class ChefPendingAdapter extends RecyclerView.Adapter<ChefPendingAdapter.
                                     holder.preparing.setText(buttonText);
                                     holder.preparing.setTextColor(ContextCompat.getColor(mcontext, R.color.green));
 
-                                    // Update the node based on the latest selection only if it matches the selected positio
+                                    DatabaseReference placedOrderRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app")
+                                            .getReference("PLACED ORDERS")
+                                            .child(updatedishmodel.getRestaurant()).child(updatedishmodel.getUserid());
+
+                                    placedOrderRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists()) {
+                                                snapshot.getRef().child("Deliveryperson").setValue(true);
+
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            // Handle the error case
+                                        }
+                                    });
+
+
+
+
+
+
 
                                 }
 

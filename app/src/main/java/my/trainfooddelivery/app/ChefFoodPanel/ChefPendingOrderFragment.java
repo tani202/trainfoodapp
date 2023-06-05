@@ -89,16 +89,20 @@ public class ChefPendingOrderFragment extends Fragment {
                             String mobile = orderSnapshot.child("MobileNo").getValue(String.class);
                             String SeatNumber=orderSnapshot.child("SeatNumber").getValue(String.class);
                             String Coach=orderSnapshot.child("Coach").getValue(String.class);
+                            String payment=orderSnapshot.child("Payment").getValue((String.class));
                             String trainNo = "";
                             String eta = "";
+                            Boolean delivery=orderSnapshot.child("Deliveryperson").getValue((Boolean.class));
+
 
                             for (DataSnapshot dishSnapshot : orderSnapshot.getChildren()) {
-                                if (!dishSnapshot.getKey().equals("CustomerName") && !dishSnapshot.getKey().equals("MobileNo")&&!dishSnapshot.getKey().equals("Coach") && !dishSnapshot.getKey().equals("SeatNumber")) {
+                                if (!dishSnapshot.getKey().equals("CustomerName") && !dishSnapshot.getKey().equals("MobileNo")&&!dishSnapshot.getKey().equals("Coach") && !dishSnapshot.getKey().equals("SeatNumber")&&!dishSnapshot.getKey().equals("Payment")&&!dishSnapshot.getKey().equals("Deliveryperson")) {
                                     String dishName = dishSnapshot.getKey();
                                     String price = dishSnapshot.child("price").getValue(String.class);
                                     String quantity = dishSnapshot.child("quantity").getValue(String.class);
                                     trainNo = dishSnapshot.child("trainno").getValue(String.class);
                                     eta = dishSnapshot.child("eta").getValue(String.class);
+
 
                                     // Generate a key by concatenating ETA and train number
                                     String dishKey = eta + "_" + trainNo;
@@ -107,12 +111,12 @@ public class ChefPendingOrderFragment extends Fragment {
                                     if (dishMap.containsKey(dishKey)) {
                                         // Add the dish to the existing list with the same key
                                         List<placedorder> existingDishList = dishMap.get(dishKey);
-                                        placedorder dish = new placedorder( dishName,  price, quantity, eta, name,mobile, trainNo,price,SeatNumber,Coach,rname,phonenumber,userid);
+                                        placedorder dish = new placedorder( dishName,  price, quantity, eta, name,mobile, trainNo,price,SeatNumber,Coach,rname,phonenumber,userid,payment,delivery);
                                         existingDishList.add(dish);
                                     } else {
                                         // Create a new list for the dish key and add the dish
                                         List<placedorder> newDishList = new ArrayList<>();
-                                        placedorder dish = new  placedorder( dishName,  price, quantity, eta, name,mobile, trainNo,price,SeatNumber,Coach,rname,phonenumber,userid);
+                                        placedorder dish = new  placedorder( dishName,  price, quantity, eta, name,mobile, trainNo,price,SeatNumber,Coach,rname,phonenumber,userid,payment,delivery);
                                         newDishList.add(dish);
                                         dishMap.put(dishKey, newDishList);
                                     }
@@ -139,6 +143,8 @@ public class ChefPendingOrderFragment extends Fragment {
                             order.setRestaurant(existingDishList.get(0).getRestaurant());
                             order.setPhone(existingDishList.get(0).getPhone());
                             order.setUserid(existingDishList.get(0).getUserid());
+                            order.setPayment(existingDishList.get(0).getPayment());
+                            order.setDeliveryperson(existingDishList.get(0).getDeliveryperson());
 
                             matchingOrderList.add(order);
 

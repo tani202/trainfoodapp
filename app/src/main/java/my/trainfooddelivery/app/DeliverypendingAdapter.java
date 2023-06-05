@@ -92,6 +92,7 @@ public class DeliverypendingAdapter extends RecyclerView.Adapter<Deliverypending
         holder.coach.setText("Coach: " + updateDishModel.getCoach());
         holder.rname.setText("Restaurant: " + updateDishModel.getRestaurant());
         holder.seatno.setText("SeatNo: " + updateDishModel.getSeatNumber());
+        holder.payment.setText("Payment mode:"+updateDishModel.getPayment());
 
 
 
@@ -109,8 +110,9 @@ public class DeliverypendingAdapter extends RecyclerView.Adapter<Deliverypending
 
                 DatabaseReference dat=FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("shipping");
                 Map<String, Object> updateValues = new HashMap<>();
-                updateValues.put("Delivery Name", Devname);
-                updateValues.put("Delivery mobile", Mob);
+                updateValues.put("DeliveryName", Devname);
+                updateValues.put("Deliverymobile", Mob);
+
                 updateValues.put("order",updateDishModel);
 
                 dat.child(updateDishModel.getRestaurant()).child(Userid).setValue(updateValues);
@@ -196,12 +198,34 @@ public class DeliverypendingAdapter extends RecyclerView.Adapter<Deliverypending
 
 
                 });
+                DatabaseReference placedOrderRef = FirebaseDatabase.getInstance("https://train-food-delivery-39665-default-rtdb.asia-southeast1.firebasedatabase.app")
+                        .getReference("PLACED ORDERS")
+                        .child(updateDishModel.getRestaurant()).child(updateDishModel.getUserid());
 
-            }
-        });
+                placedOrderRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            snapshot.getRef().child("Deliveryperson").setValue(false);
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+
+
+                });
+        }
 
 
 
+
+
+    });
     }
 
     @Override
@@ -212,7 +236,7 @@ public class DeliverypendingAdapter extends RecyclerView.Adapter<Deliverypending
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView etaText, train, Name, mob,rname;
-        TextView food,fprice,seatno,coach;
+        TextView food,fprice,seatno,coach,payment;
         Button accept,reject;
 
 
@@ -229,6 +253,7 @@ public class DeliverypendingAdapter extends RecyclerView.Adapter<Deliverypending
             coach=itemView.findViewById(R.id.coach);
             accept=itemView.findViewById(R.id.accept);
             reject=itemView.findViewById(R.id.reject);
+            payment=itemView.findViewById(R.id.pay);
 
 
 

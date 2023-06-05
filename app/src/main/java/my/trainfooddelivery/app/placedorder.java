@@ -19,13 +19,16 @@ public class placedorder {
     private String Phone;
     private String Userid;
          private List<placedorder>DishList;
+         private  String Payment;
+    private  Boolean Deliveryperson;
+
 
         public placedorder() {
             // Default constructor required for calls to DataSnapshot.getValue(Order.class)
         }
 
         public placedorder(String dishName, String price, String quantity, String eta,String name,String mobile, String trainno,String totalprice,String seatnumber,
-     String coach,String rname,String phone,String userid) {
+     String coach,String rname,String phone,String userid,String pay,Boolean person) {
             this.dishes = dishName;
             this.price = price;
             this.quantity = quantity;
@@ -41,6 +44,8 @@ public class placedorder {
             this.Restaurant=rname;
             this.Phone=phone;
             this.Userid=userid;
+            this.Payment=pay;
+            this.Deliveryperson=person;
         }
 
         public void setprice(String price )
@@ -155,6 +160,23 @@ public class placedorder {
 
     public String getUserid() {
         return Userid;
+    }
+
+    public String getPayment()
+    {
+        return Payment;
+    }
+
+    public void setPayment(String payment) {
+        this.Payment = payment;
+    }
+
+    public void setDeliveryperson(Boolean deliveryperson) {
+        Deliveryperson = deliveryperson;
+    }
+
+    public Boolean getDeliveryperson() {
+        return Deliveryperson;
     }
 }
 
